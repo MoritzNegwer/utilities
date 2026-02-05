@@ -36,7 +36,7 @@ def StitchStack(TextfileAddress,channel_name,NumImg):
 	#define stitch settings. Adapt if you need more/less stringent processing 
 	Setting="layout=["+newFolder+"] channels_for_registration=[Red, Green and Blue] rgb_order=rgb fusion_method=[Linear Blending] fusion=1.5 regression=0.5 max/avg=5 absolute=50";
 	#run through list of images, then process by z-plane 
-	for i in range(0,NumImg):
+	for i in range(1,NumImg):
 	  	try:
 			#update TextFile so that different start numbers work
 			current_plane = 'Z'+str(i).zfill(4)
@@ -75,13 +75,19 @@ def StitchStack(TextfileAddress,channel_name,NumImg):
 #### main function ### 
 
 #[ path to TileConfig files, channel name]
-TileConfigs = [ ["E://2024-01-22_Yan_S1_hypothalamus_45deg_restitch//TileConfiguration_{zzz}_C00.txt.registered","C00",643],
-				["E://2024-01-22_Yan_S1_hypothalamus_45deg_restitch//TileConfiguration_{zzz}_C01.txt.registered","C01",643],
-				["E://2024-01-22_Yan_S1_hypothalamus_45deg_restitch//TileConfiguration_{zzz}_C02.txt.registered","C02",643],
+TileConfigs = [ ["/media/wirrbel/MN_6/2026-02-04_I9_zstacks/I9_right_zstack_stitch/I9_SE_C00_WFA_right_zstack/TileConfiguration_{zzz}.txt.registered","C00_WFA",954],
+				["/media/wirrbel/MN_6/2026-02-04_I9_zstacks/I9_right_zstack_stitch/I9_SE_C01_NET_right_zstack/TileConfiguration_{zzz}.txt.registered","C01_NET",954],
+				["/media/wirrbel/MN_6/2026-02-04_I9_zstacks/I9_right_zstack_stitch/I9_SE_C02_ChAT_right_zstack/TileConfiguration_{zzz}.txt.registered","C02_ChAT",954],
+				["/media/wirrbel/MN_6/2026-02-04_I9_zstacks/I9_right_zstack_stitch/I9_SE_C03_NucSpot_right_zstack/TileConfiguration_{zzz}.txt.registered","C03_NucSpot",954],
                 
 				]
 
-				
+
+#run sequentially through the stack (multiprocessing is troublesome, skips images)
+for config,channel_name,NumImg in TileConfigs:
+	StitchStack(config,channel_name,NumImg)
+
+''''
 #start multiple threads, one for each stack
 threads = []
 for config,channel_name,NumImg in TileConfigs:
@@ -95,3 +101,4 @@ for t in threads:
 # Wait for all threads to finish
 for t in threads:
     t.join()
+'''
